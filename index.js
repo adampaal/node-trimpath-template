@@ -259,7 +259,7 @@ function config(defaults){
 
     var parse = function(body, tmplName, etc) {
         body = cleanWhiteSpace(body);
-        var funcText = [ "var TrimPath_Template_TEMP = function(_OUT, _CONTEXT, _FLAGS) { with (_CONTEXT) {" ];
+        var funcText = [ "var TrimPath_Template_TEMP = function(_OUT, _CONTEXT, _FLAGS) { const { items, _MODIFIERS } = _CONTEXT; " ];
         var state    = { stack: [], line: 1 };                              // TODO: Fix line number counting.
         var endStmtPrev = defaults.OPENING.length * -1;
         while (endStmtPrev < body.length) {
@@ -356,7 +356,7 @@ function config(defaults){
         emitSectionText(body.substring(endStmtPrev + defaults.CLOSING.length), funcText);
         if (state.stack.length != 0)
             throw new etc.ParseError(tmplName, state.line, "unclosed, unmatched statement(s): " + state.stack.join(","));
-        funcText.push("}}; TrimPath_Template_TEMP");
+        funcText.push("}; TrimPath_Template_TEMP");
         return funcText.join("");
     }
 
